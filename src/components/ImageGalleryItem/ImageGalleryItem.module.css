@@ -1,0 +1,13 @@
+.gallery-item {
+  width: calc((100% - 60px) / 4);
+}
+.gallery-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.gallery-item img:hover,
+.gallery-item img:focus {
+  cursor: zoom-in;
+  transform: scale(1.05);
+}

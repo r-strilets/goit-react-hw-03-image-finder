@@ -1,0 +1,27 @@
+.form {
+  background-color: rgba(65, 65, 235, 0.897);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button {
+  position: relative;
+  left: 23px;
+  top: 2px;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.input {
+  padding: 5px;
+  padding-left: 27px;
+  outline: none;
+  border: none;
+}
+.input:hover,
+.input:focus {
+  outline: none;
+  border: none;
+}
