@@ -12,8 +12,9 @@ export class App extends Component {
     name: '',
     page: 1,
     isLoading: false,
-    isShown: false,
+    // isShown: false,
     error: '',
+    img: null,
   };
 
   moreLoadButtonClick = () => {
@@ -53,27 +54,25 @@ export class App extends Component {
     this.setState({ data: [], name: name });
     console.log(this.state.name);
   };
-  showImg = image => {
-    if (!this.state.isShown) {
-      this.setState(prevState => ({ isShown: !prevState.isShown }));
-    }
+  openModal = e => {
+    const img = e.target.dataset.url;
+    this.setState({ img });
   };
-
   render() {
     console.log(this.state);
 
-    const { isLoading, isShown } = this.state;
+    const { isLoading, isShown, img } = this.state;
     return (
       <>
         <Searchbar getNewName={this.newSearch} />
         {isLoading && <Loader />}
         {this.state.data.length > 0 && (
           <>
-            <ImageGallery images={this.state.data} />
+            <ImageGallery images={this.state.data} openModal={this.openModal} />
             <Button moreLoadButtonClick={this.moreLoadButtonClick} />
           </>
         )}
-        {isShown && <Modal />}
+        {img && <Modal img={img} />}
       </>
     );
   }
