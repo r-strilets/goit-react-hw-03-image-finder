@@ -12,7 +12,6 @@ export class App extends Component {
     name: '',
     page: 1,
     isLoading: false,
-    // isShown: false,
     error: '',
     img: null,
   };
@@ -42,6 +41,9 @@ export class App extends Component {
           this.setState({
             isLoading: false,
           });
+          if (this.state.data.length === 0) {
+            this.setState({ error: 'nothing found' });
+          }
         });
     }
   }
@@ -52,27 +54,30 @@ export class App extends Component {
       return;
     }
     this.setState({ data: [], name: name });
-    console.log(this.state.name);
   };
   openModal = e => {
     const img = e.target.dataset.url;
-    this.setState({ img });
+    this.setState(prevState => ({ img }));
   };
-  render() {
-    console.log(this.state);
+  closeModal = () => {
+    this.setState({ img: null });
+  };
 
-    const { isLoading, isShown, img } = this.state;
+  render() {
+    const { isLoading, img } = this.state;
     return (
       <>
         <Searchbar getNewName={this.newSearch} />
         {isLoading && <Loader />}
-        {this.state.data.length > 0 && (
+        {this.state.data.length > 0 ? (
           <>
             <ImageGallery images={this.state.data} openModal={this.openModal} />
             <Button moreLoadButtonClick={this.moreLoadButtonClick} />
           </>
+        ) : (
+          <h2 className="error">{this.state.error}</h2>
         )}
-        {img && <Modal img={img} />}
+        {img && <Modal img={img} closeModal={this.closeModal} />}
       </>
     );
   }

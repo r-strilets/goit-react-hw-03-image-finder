@@ -4,11 +4,11 @@ import css from './ImageGallery.module.css';
 
 export class ImageGallery extends Component {
   render() {
-    const { openModal } = this.props;
+    const { openModal, images } = this.props;
     return (
       <>
         <ul className={css.gallery} onClick={e => openModal(e)}>
-          <ImageGalleryItem images={this.props.images} />
+          <ImageGalleryItem images={images} />
         </ul>
       </>
     );
