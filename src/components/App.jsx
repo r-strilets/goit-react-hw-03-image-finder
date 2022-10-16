@@ -4,6 +4,7 @@ import Button from './Button/Button';
 import { fetchData } from 'api/api';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 export class App extends Component {
   state = {
@@ -11,6 +12,7 @@ export class App extends Component {
     name: '',
     page: 1,
     isLoading: false,
+    isShown: false,
     error: '',
   };
 
@@ -32,7 +34,6 @@ export class App extends Component {
               prevState.name !== name
                 ? [...newData.hits]
                 : [...prevState.data, ...newData.hits],
-            page: 1,
           }))
         )
         .catch(error => this.setState({ error: error.message }))
@@ -52,11 +53,16 @@ export class App extends Component {
     this.setState({ data: [], name: name });
     console.log(this.state.name);
   };
+  showImg = image => {
+    if (!this.state.isShown) {
+      this.setState(prevState => ({ isShown: !prevState.isShown }));
+    }
+  };
 
   render() {
     console.log(this.state);
 
-    const { isLoading } = this.state;
+    const { isLoading, isShown } = this.state;
     return (
       <>
         <Searchbar getNewName={this.newSearch} />
@@ -67,6 +73,7 @@ export class App extends Component {
             <Button moreLoadButtonClick={this.moreLoadButtonClick} />
           </>
         )}
+        {isShown && <Modal />}
       </>
     );
   }
