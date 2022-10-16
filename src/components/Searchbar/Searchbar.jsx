@@ -13,6 +13,7 @@ class Searchbar extends Component {
   getDataFromInput = e => {
     e.preventDefault();
     this.props.getNewName(this.state.name);
+    this.setState({ name: '' });
   };
   render() {
     return (
