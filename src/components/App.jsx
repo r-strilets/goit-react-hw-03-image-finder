@@ -16,12 +16,6 @@ export class App extends Component {
     img: null,
   };
 
-  moreLoadButtonClick = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
   componentDidUpdate(_, prevState) {
     const { name, page } = this.state;
     if (prevState.page !== page || prevState.name !== name) {
@@ -53,8 +47,14 @@ export class App extends Component {
       alert('Empty search field!!!');
       return;
     }
-    this.setState({ data: [], name: name });
+    this.setState({ data: [], name: name, page: 1 });
   };
+  moreLoadButtonClick = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   openModal = e => {
     const img = e.target.dataset.url;
     this.setState(prevState => ({ img }));
@@ -70,13 +70,13 @@ export class App extends Component {
         <Searchbar getNewName={this.newSearch} />
         {isLoading && <Loader />}
         {this.state.data.length > 0 ? (
-          <>
-            <ImageGallery images={this.state.data} openModal={this.openModal} />
-            <Button moreLoadButtonClick={this.moreLoadButtonClick} />
-          </>
+          <ImageGallery images={this.state.data} openModal={this.openModal} />
         ) : (
           <h2 className="error">{this.state.error}</h2>
         )}
+        {this.state.data.length >= 12 ? (
+          <Button moreLoadButtonClick={this.moreLoadButtonClick} />
+        ) : null}
         {img && <Modal img={img} closeModal={this.closeModal} />}
       </>
     );
