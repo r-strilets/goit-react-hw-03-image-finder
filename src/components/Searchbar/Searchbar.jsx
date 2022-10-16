@@ -7,12 +7,12 @@ class Searchbar extends Component {
   };
   onChangeInput = e => {
     this.setState({
-      [e.target.name]: e.target.value,
+      name: e.target.value,
     });
   };
   getDataFromInput = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.name);
+    this.props.getNewName(this.state.name);
   };
   render() {
     return (

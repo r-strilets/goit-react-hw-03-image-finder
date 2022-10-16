@@ -11,67 +11,59 @@ export class App extends Component {
     name: '',
     page: 1,
     isLoading: false,
-    isShown: false,
     error: '',
   };
 
   moreLoadButtonClick = () => {
     this.setState(prevState => ({
-      isLoading: true,
+      page: prevState.page + 1,
     }));
-    fetchData(this.state.name, this.state.page)
-      .then(resp => resp.json())
-      .then(newData =>
-        this.setState(prevState => ({
-          data: [...prevState.data, ...newData.hits],
-          page: prevState.page + 1,
-        }))
-      )
-      .catch(error => this.setState({ error: error.message }))
-      .finally(() => {
-        this.setState({
-          isLoading: false,
-        });
-      });
   };
 
-  newSearch = async name => {
+  componentDidUpdate(_, prevState) {
+    const { name, page } = this.state;
+    if (prevState.page !== page || prevState.name !== name) {
+      this.setState({ isLoading: true });
+      fetchData(name, page)
+        .then(resp => resp.json())
+        .then(newData =>
+          this.setState(prevState => ({
+            data:
+              prevState.name !== name
+                ? [...newData.hits]
+                : [...prevState.data, ...newData.hits],
+            page: 1,
+          }))
+        )
+        .catch(error => this.setState({ error: error.message }))
+        .finally(() => {
+          this.setState({
+            isLoading: false,
+          });
+        });
+    }
+  }
+
+  newSearch = name => {
     if (name.trim().length === 0) {
       alert('Empty search field!!!');
       return;
     }
-
-    this.setState({ page: 1, isLoading: true });
-    fetchData(name, this.state.page)
-      .then(resp => resp.json())
-      .then(newData =>
-        this.setState(prevState => ({
-          data: [...newData.hits],
-          name: name,
-          page: prevState.page + 1,
-        }))
-      )
-      .catch(error => this.setState({ error: error.message }))
-      .finally(
-        this.setState(() => {
-          this.setState({
-            isLoading: false,
-          });
-        })
-      );
+    this.setState({ data: [], name: name });
+    console.log(this.state.name);
   };
 
   render() {
-    console.log(this.state.data);
+    console.log(this.state);
+
     const { isLoading } = this.state;
     return (
       <>
-        <Searchbar onSubmit={this.newSearch} />
+        <Searchbar getNewName={this.newSearch} />
         {isLoading && <Loader />}
         {this.state.data.length > 0 && (
           <>
             <ImageGallery images={this.state.data} />
-            {/* {isLoading && <Loader />} */}
             <Button moreLoadButtonClick={this.moreLoadButtonClick} />
           </>
         )}
